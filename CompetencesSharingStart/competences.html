@@ -16,12 +16,23 @@
     .color-green{
         color: green;
     }
+    #basic-addon1{
+        background-color: green;
+        color: white;
+    }
     </style>
 </head>
 <body>
     <div id="app">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Podaj nazwę kompetencji</span>
+            </div>
+             <!-- <input v-model="stext" type="text" class="form-control" placeholder="..." v-on:keyup.enter="search"> -->
+             <input v-model="stext" type="text" class="form-control" placeholder="..." v-on:keyup="filtered">
+        </div>
         <div class="d-flex flex-wrap" style="justify-content: center">
-            <div class="card" style="width: 18rem;" v-for="item in competacies" v-show="item.Level > 0">
+            <div class="card" style="width: 18rem; cursor: pointer" v-for="(item, index) in filtered" v-show="item.Level > 0" v-on:dblclick="remove(index)">
                 <h5 class="card-title text-center">{{item.Name.toUpperCase()}}</h5>
                 <div class="card-body">
                     <img class="card-img-top" v-bind:src="'assets/' + item.Picture" alt="Card image cap">
@@ -50,9 +61,30 @@
                     { Id: 10, Name: "WebAPI", Level: 5, Picture: "webapi.png", Description: "" }
                 ];
             },
-            data:{ //model
-                competacies: []
-            }
+
+            //model
+            data:{ 
+                competacies: [],
+                stext: ""
+            },
+            computed: {
+                filtered: function (){
+                    var stext = this.stext; //włączenie śledzenia
+                    var competacies = this.competacies;
+                    return competacies.filter(function(item){
+                        return item.Name.toLowerCase().includes(stext.toLowerCase());
+                    });
+                }
+            },
+            methods: {
+                remove: function(index){
+                    // alert(index);
+                    this.competacies.splice(index, 1)
+                },
+                // search: function(){
+                // alert(this.stext);
+                // }
+            },
         });
     </script>
 </body>
